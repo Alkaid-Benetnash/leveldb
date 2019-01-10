@@ -509,7 +509,8 @@ class PosixEnv : public Env {
       return PosixError(filename, errno);
     }
 
-    if (!mmap_limiter_.Acquire()) {
+    if (1) {
+    //if (!mmap_limiter_.Acquire()) {
       *result = new PosixRandomAccessFile(filename, fd, &fd_limiter_);
       return Status::OK();
     }
@@ -536,7 +537,7 @@ class PosixEnv : public Env {
 
   Status NewWritableFile(const std::string& filename,
                          WritableFile** result) override {
-    int fd = ::open(filename.c_str(), O_TRUNC | O_WRONLY | O_CREAT, 0644);
+    int fd = ::open(filename.c_str(), O_WRONLY | O_CREAT, 0644);
     if (fd < 0) {
       *result = nullptr;
       return PosixError(filename, errno);
